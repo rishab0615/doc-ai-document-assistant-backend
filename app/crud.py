@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+# from pgvector.sqlalchemy import cosine_distance
+import json
 from fastapi import HTTPException
-
 from app import models, schemas, utils
-
+from app.services.chunking_service import split_into_chunks
+from app.services.embedding_service import generate_embedding
 import os
 
 
@@ -22,7 +24,7 @@ def create_doc(
     to the currently logged-in user.
     """
 
-    db_doc = models.Document(
+    db_doc = models.Document(                   
         user_id=user_id,
         extracted_text=extracted_text,
         original_filename=document.original_filename,
@@ -35,7 +37,45 @@ def create_doc(
     db.commit()
     db.refresh(db_doc)
 
+    chunks = split_into_chunks(extracted_text)
+    print(chunks[0])
+    print(len(chunks))
+
+
+    for chunk in chunks:
+        embedding = generate_embedding(chunk)             # GENREATING a emeding to save in the document_embeddings table
+        db_chunk = models.DocumentChunk(                  # CREATING sqlalchemy model object for a single chunk of a document
+        document_id=db_doc.id,
+        chunk_text=chunk,
+        embedding=embedding,                              # No need to convert to String cause now we have vector db
+    )
+
+        db.add(db_chunk)               
+
+    db.commit()
+
     return db_doc
+
+
+
+# def get_chunks(db:Session, document_id:int ):
+#     return   db.query(models.DocumentChunk).filter(models.DocumentChunk.document_id == document_id).all()
+
+def get_similar_chunks(db:Session, document_id:int, question_embedding: list[float], limit:int=3):
+    return (db.query(models.DocumentChunk)
+            .filter(models.DocumentChunk.document_id == document_id)
+            .order_by(
+                           
+                    models.DocumentChunk.embedding.cosine_distance(
+                        question_embedding
+                    )
+                   
+                
+            )
+            .limit(limit)
+            .all()
+    
+    )
 
 
 def get_documents(

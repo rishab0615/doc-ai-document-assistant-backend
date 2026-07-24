@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String , Numeric, BigInteger, DateTime, ForeignKey, Text
 from app.database import Base
+from pgvector.sqlalchemy import Vector
+from sqlalchemy.orm import relationship
 from datetime import datetime
 from sqlalchemy.sql import func
 
@@ -14,10 +16,37 @@ class Document(Base):
     stored_filename = Column(String, nullable=False)
     content_type = Column(String, nullable=False)
     file_size = Column(BigInteger, nullable=False)
+    chunks = relationship(
+    "DocumentChunk",
+    back_populates="document",
+    cascade="all, delete-orphan",
+)
     uploaded_at = Column(
         DateTime,
         default=datetime.utcnow
     )
+
+
+
+class DocumentChunk(Base):
+    __tablename__ = "document_chunks"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    document_id = Column(
+        Integer,
+        ForeignKey("documents.id", ondelete="CASCADE"),             
+        nullable=False,
+    )
+
+    chunk_text = Column(Text, nullable=False)
+
+    embedding = Column(Vector(3072), nullable=False)             # First this was a text now it is a Vector
+
+    document = relationship(
+        "Document",
+        back_populates="chunks",
+    )    
 
     
 class User(Base):
@@ -49,23 +78,4 @@ class ChatMessage(Base):
 
 
 
-class DocumentChunk(Base):
-    __tablename__ = "document_chunks"
-
-    id = Column(Integer, primary_key=True, index=True)
-
-    document_id = Column(
-        Integer,
-        ForeignKey("documents.id", ondelete="CASCADE"),
-        nullable=False,
-    )
-
-    chunk_text = Column(Text, nullable=False)
-
-    embedding = Column(Text, nullable=False)
-
-    document = relationship(
-        "Document",
-        back_populates="chunks",
-    )
 

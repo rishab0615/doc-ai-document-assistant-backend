@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, oauth2, schemas
 from app.dependencies import get_db
+from app.services.embedding_service import generate_embedding
 from app.services.gemini_service import (
     ask_gemini,
     build_chat_history,
@@ -42,22 +43,50 @@ def ask_question(
         document_id=document.id,
         user_id=current_user.id,
     )
-   # Remove the current question that was just saved
+
+    # Remove the current question
     messages = messages[:-1]
-    # 4. Keep only the latest conversation
+
+    # Keep only the latest conversation
     messages = messages[-6:]
 
-    # 5. Convert conversation into prompt text
+    # Convert conversation into prompt text
     chat_history = build_chat_history(messages)
 
-    # 6. Ask Gemini
+    # --------------------------------------------------
+    # RAG - Retrieve Relevant Chunks
+    # --------------------------------------------------
+
+    # Generate embedding for the user's question
+    question_embedding = generate_embedding(
+        request.question,
+    )
+    
+    # Retrieve the most similar chunks using pgvector
+    top_chunks=crud.get_similar_chunks(db=db, document_id=document.id, question_embedding=question_embedding)
+    
+    texts=[]
+
+    for chunk in top_chunks:
+        texts.append(chunk.chunk_text)
+
+    # Build retrieved context
+    retrieved_context = "\n\n------------------------\n\n".join(texts)
+
+    print("\nRetrieved Context:\n")
+    print(retrieved_context)
+
+    # --------------------------------------------------
+    # Ask Gemini using retrieved context only
+    # --------------------------------------------------
+
     answer = ask_gemini(
-        document_text=document.extracted_text,
+        document_text=retrieved_context,
         chat_history=chat_history,
         question=request.question,
     )
 
-    # 7. Save assistant reply
+    # Save assistant reply
     crud.create_chat_message(
         db=db,
         document_id=document.id,
@@ -66,7 +95,6 @@ def ask_question(
         message=answer,
     )
 
-    # 8. Return response
     return schemas.AIResponse(
         answer=answer,
     )
