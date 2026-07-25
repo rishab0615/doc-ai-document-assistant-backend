@@ -1,8 +1,8 @@
 # 🚀 DocMind Backend
 
-Backend API for **DocMind**, an AI-powered document assistant built with **FastAPI**, **PostgreSQL**, and **Google Gemini AI**.
+Backend API for **DocMind**, an AI-powered document assistant built with **FastAPI**, **PostgreSQL**, **Retrieval-Augmented Generation (RAG)** and **Google Gemini AI**.
 
-The backend handles authentication, PDF upload & processing, document management, persistent chat history, and AI-powered question answering.
+The backend handles authentication, PDF upload & processing, document management, persistent chat history, Retrieval-Augmented Generation (RAG) and AI-powered question answering.
 
 ---
 
@@ -11,6 +11,7 @@ The backend handles authentication, PDF upload & processing, document management
 - 🔐 JWT Authentication
 - 👤 User Registration & Login
 - 📄 PDF Upload
+- つ Retrieval-Augmented Generation (RAG)
 - 📖 Automatic PDF Text Extraction
 - 🤖 Google Gemini AI Integration
 - 💬 Persistent Chat History
@@ -28,6 +29,7 @@ The backend handles authentication, PDF upload & processing, document management
 - FastAPI
 - SQLAlchemy
 - PostgreSQL
+- pgvector
 - Alembic
 - Pydantic
 - JWT Authentication
@@ -238,7 +240,6 @@ Authorization: Bearer <access_token>
 # 🚀 Future Improvements
 
 - Refresh Tokens
-- RAG (Vector Search)
 - Streaming AI Responses
 - OCR Support
 - Multiple AI Providers
