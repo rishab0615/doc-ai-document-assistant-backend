@@ -1,10 +1,15 @@
 __pycache__/
 *.py[cod]
+*.pyo
+
 .venv/
 .env
+
 .vscode/
-.README.md
 .idea/
 .DS_Store
+
 .pytest_cache/
 .mypy_cache/
+
+uploads/

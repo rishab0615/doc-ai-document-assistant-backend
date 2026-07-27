@@ -34,6 +34,8 @@ def upload_document(
     extension = os.path.splitext(file.filename)[1]
     stored_filename = f"{uuid.uuid4()}{extension}"
 
+    os.makedirs("uploads", exist_ok=True)
+
     upload_path = os.path.join("uploads", stored_filename)
 
     with open(upload_path, "wb") as buffer:
