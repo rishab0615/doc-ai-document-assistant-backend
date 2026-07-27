@@ -267,10 +267,6 @@ GitHub
 
 https://github.com/rishab0615
 
-Portfolio
-
-https://rishabsharma.web.app
-
 LinkedIn
 
 https://www.linkedin.com/in/rishab-sharma-3ba404235/

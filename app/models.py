@@ -41,7 +41,7 @@ class DocumentChunk(Base):
 
     chunk_text = Column(Text, nullable=False)
 
-    embedding = Column(Vector(3072), nullable=False)             # First this was a text now it is a Vector
+    embedding = Column(Vector(768), nullable=False)             # First this was a text now it is a Vector
 
     document = relationship(
         "Document",
