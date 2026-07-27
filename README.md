@@ -1,31 +1,19 @@
 # 📄 DocMind - AI Document Assistant
 
+DocMind is a full-stack AI-powered document assistant that allows users to upload PDF documents, extract their content, and ask natural language questions using **Google Gemini AI**.
 
-Backend API for **DocMind**, an AI-powered document assistant built with **FastAPI**, **PostgreSQL**, **Retrieval-Augmented Generation (RAG)** and **Google Gemini AI**.
-
-The backend handles authentication, PDF upload & processing, document management, persistent chat history, Retrieval-Augmented Generation (RAG) and AI-powered question answering.
-
-DocMind is a full-stack AI-powered document assistant that lets users upload PDF documents, extract their content, and ask natural language questions about them.
-
-Built with **Flutter**, **FastAPI**, **PostgreSQL**, and **Google Gemini AI**.
-
+The backend is built with **FastAPI**, **PostgreSQL**, **pgvector**, and **Retrieval-Augmented Generation (RAG)**, while the frontend is built with **Flutter**.
 
 ---
 
-## ✨ Features
+# ✨ Features
 
-- 📄 Upload PDF documents
-- 🔍 Automatic text extraction
-- 🤖 Ask questions about uploaded documents
-- 💬 Persistent chat history
-- 🧠 Context-aware conversations
-- 🗑️ Delete documents with complete chat history
-- 🔐 JWT Authentication
 - 👤 User Registration & Login
+- 🔐 JWT Authentication
 - 📄 PDF Upload
-- つ Retrieval-Augmented Generation (RAG)
 - 📖 Automatic PDF Text Extraction
 - 🤖 Google Gemini AI Integration
+- 🧠 Retrieval-Augmented Generation (RAG)
 - 💬 Persistent Chat History
 - 🧠 Conversation Memory
 - 🗂️ Document Management
@@ -33,32 +21,54 @@ Built with **Flutter**, **FastAPI**, **PostgreSQL**, and **Google Gemini AI**.
 - 🛡️ User-specific Data Isolation
 - ⚡ RESTful APIs
 - 🗄️ PostgreSQL Database
-
+- 🧬 pgvector Semantic Search
+- 🐳 Docker & Docker Compose Support
 - 📱 Clean Flutter UI
-- ⚡ FastAPI REST backend   
-- 🗄 PostgreSQL database
-
 
 ---
 
-## 🛠 Tech Stack
+# 🏗️ Architecture
 
-### Frontend
+```text
+Flutter App
+      │
+      ▼
+ FastAPI Backend
+      │
+      ├──────────────► Google Gemini API
+      │
+      ▼
+ PostgreSQL + pgvector
+```
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
 - Flutter
 - GetX
 - Dio
 - Flutter Markdown
 
-### Backend
+## Backend
+
 - FastAPI
 - SQLAlchemy
 - PostgreSQL
 - pgvector
 - Alembic
 - JWT Authentication
+- Docker
+- Docker Compose
 
-### AI
+## AI
+
 - Google Gemini API
+- Retrieval-Augmented Generation (RAG)
+- Vector Embeddings
+- Semantic Search
 
 ---
 
@@ -68,6 +78,7 @@ Built with **Flutter**, **FastAPI**, **PostgreSQL**, and **Google Gemini AI**.
 
 <img src="screenshots/splash.png" width="260">
 
+---
 
 ## Login Screen
 
@@ -99,9 +110,11 @@ Built with **Flutter**, **FastAPI**, **PostgreSQL**, and **Google Gemini AI**.
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
-```
+## Flutter
+
+```text
 lib/
 ├── core/
 ├── features/
@@ -113,9 +126,9 @@ lib/
 └── main.dart
 ```
 
-Backend
+## Backend
 
-```
+```text
 app/
 ├── crud/
 ├── models/
@@ -129,67 +142,6 @@ app/
 
 ---
 
-## Backend Features
-
-- JWT Authentication
-- Secure User Accounts
-- PDF Upload
-- Text Extraction
-- Gemini AI Integration
-- Conversation Memory
-- Chat History
-- PostgreSQL Storage
-- REST APIs
-
----
-
-## Future Improvements
-
-- Vector embeddings (RAG)
-- Semantic search
-- Streaming AI responses
-- Multiple AI providers
-- Document summarization
-- Citation support
-- OCR for scanned PDFs
-
----
-
-## Getting Started
-
-### Frontend
-
-```bash
-git clone https://github.com/rishab0615/doc-ai-flutter.git
-
-cd doc-ai-flutter
-
-flutter pub get
-
-flutter run
-```
-
-### Backend
-
-```bash
-git clone https://github.com/rishab0615/doc-ai-document-assistant-backend.git
-
-cd doc-ai-document-assistant-backend
-
-python -m venv .venv
-
-source .venv/bin/activate
-
-pip install -r requirements.txt
-
-alembic upgrade head
-
-uvicorn app.main:app --reload
-```
-
----
-
-<<<<<<< HEAD
 # 🔄 Request Flow
 
 ```text
@@ -209,27 +161,39 @@ Extract Text
 
 ↓
 
-Store in PostgreSQL
+Store Document
 
 ↓
 
-Ask Question
+Generate Embeddings
 
 ↓
 
-Load Previous Chat History
+Store Vector in PostgreSQL (pgvector)
 
 ↓
 
-Send Context + Document to Gemini
+User asks a question
 
 ↓
 
-Store AI Response
+Retrieve relevant document chunks
 
 ↓
 
-Return Answer
+Load previous chat history
+
+↓
+
+Send context + chat history to Gemini
+
+↓
+
+Store AI response
+
+↓
+
+Return answer
 ```
 
 ---
@@ -238,44 +202,117 @@ Return Answer
 
 Protected endpoints require a JWT access token.
 
-```
+```http
 Authorization: Bearer <access_token>
+```
+
+---
+
+# 🐳 Running with Docker
+
+## Clone the repository
+
+```bash
+git clone https://github.com/rishab0615/ai-document-assistant.git
+cd ai-document-assistant
+```
+
+## Create environment file
+
+```bash
+cp .env.example .env
+```
+
+Fill in your Gemini API key and other environment variables.
+
+## Start everything
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- FastAPI Backend
+- PostgreSQL
+- pgvector
+- Docker Network
+- Persistent Docker Volume
+
+Backend:
+
+```
+http://localhost:8000
+```
+
+Swagger:
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+# 💻 Running Without Docker
+
+## Backend
+
+```bash
+python -m venv .venv
+
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+alembic upgrade head
+
+uvicorn app.main:app --reload
+```
+
+---
+
+# 📱 Flutter Client
+
+```bash
+git clone https://github.com/rishab0615/doc-ai-flutter.git
+
+cd doc-ai-flutter
+
+flutter pub get
+
+flutter run
 ```
 
 ---
 
 # 🚀 Future Improvements
 
-- Refresh Tokens
 - Streaming AI Responses
 - OCR Support
+- Citation Support
 - Multiple AI Providers
-- Docker
-- CI/CD
-- Unit Tests
+- Refresh Tokens
+- Redis Caching
+- Background Workers
+- CI/CD Pipeline
+- Kubernetes Deployment
 
 ---
 
-# 📱 Frontend
-
-Flutter Client
-
-https://github.com/rishab0615/doc-ai-flutter
-
----
-## Author
->>>>>>> a297bf4 (created dockerized containers for this app)
+# 👨‍💻 Author
 
 **Rishab Sharma**
 
-Flutter Developer
+Software Engineer | Flutter • Python • FastAPI • AI Applications
 
-GitHub:
+**GitHub**
+
 https://github.com/rishab0615
 
-Portfolio:
+**Portfolio**
+
 https://rishabsharma.web.app
 
-LinkedIn:
+**LinkedIn**
+
 https://www.linkedin.com/in/rishab-sharma-3ba404235/
->>>>>>> a297bf4 (created dockerized containers for this app)
