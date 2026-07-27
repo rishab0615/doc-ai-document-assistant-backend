@@ -1,13 +1,25 @@
-# 🚀 DocMind Backend
+# 📄 DocMind - AI Document Assistant
+
 
 Backend API for **DocMind**, an AI-powered document assistant built with **FastAPI**, **PostgreSQL**, **Retrieval-Augmented Generation (RAG)** and **Google Gemini AI**.
 
 The backend handles authentication, PDF upload & processing, document management, persistent chat history, Retrieval-Augmented Generation (RAG) and AI-powered question answering.
 
+DocMind is a full-stack AI-powered document assistant that lets users upload PDF documents, extract their content, and ask natural language questions about them.
+
+Built with **Flutter**, **FastAPI**, **PostgreSQL**, and **Google Gemini AI**.
+
+
 ---
 
-# ✨ Features
+## ✨ Features
 
+- 📄 Upload PDF documents
+- 🔍 Automatic text extraction
+- 🤖 Ask questions about uploaded documents
+- 💬 Persistent chat history
+- 🧠 Context-aware conversations
+- 🗑️ Delete documents with complete chat history
 - 🔐 JWT Authentication
 - 👤 User Registration & Login
 - 📄 PDF Upload
@@ -22,167 +34,162 @@ The backend handles authentication, PDF upload & processing, document management
 - ⚡ RESTful APIs
 - 🗄️ PostgreSQL Database
 
+- 📱 Clean Flutter UI
+- ⚡ FastAPI REST backend   
+- 🗄 PostgreSQL database
+
+
 ---
 
-# 🛠️ Tech Stack
+## 🛠 Tech Stack
 
+### Frontend
+- Flutter
+- GetX
+- Dio
+- Flutter Markdown
+
+### Backend
 - FastAPI
 - SQLAlchemy
 - PostgreSQL
 - pgvector
 - Alembic
-- Pydantic
 - JWT Authentication
+
+### AI
 - Google Gemini API
-- PyPDF
-- Python
 
 ---
 
-# 🏗️ Architecture
+# 📱 Screenshots
 
-```text
-Flutter App
-      │
-      ▼
-FastAPI Backend
-      │
- ┌────┴────────────┐
- │                 │
- ▼                 ▼
-PostgreSQL     Google Gemini
-      │
-      ▼
- Uploaded PDFs
+## Splash Screen
+
+<img src="screenshots/splash.png" width="260">
+
+
+## Login Screen
+
+<img src="screenshots/login.png" width="260">
+
+---
+
+## Empty Library
+
+<img src="screenshots/nodoc.png" width="260">
+
+---
+
+## Upload Document
+
+<img src="screenshots/upload.png" width="260">
+
+---
+
+## Document Library
+
+<img src="screenshots/docs.png" width="260">
+
+---
+
+## AI Chat
+
+<img src="screenshots/chats.png" width="260">
+
+---
+
+## Project Structure
+
+```
+lib/
+├── core/
+├── features/
+│   ├── auth/
+│   ├── documents/
+│   ├── upload/
+│   └── chat/
+├── routes/
+└── main.dart
 ```
 
----
-
-# 📂 Project Structure
+Backend
 
 ```
 app/
-├── crud.py
-├── database.py
-├── dependencies.py
-├── models.py
-├── oauth2.py
-├── schemas.py
-├── main.py
-│
-├── config.py
+├── crud/
+├── models/
 ├── routers/
-│   ├── auth.py
-│   ├── documents.py
-│   └── ai.py
-│
+├── schemas/
 ├── services/
-│   ├── gemini_service.py
-│   └── pdf_service.py
-│
-└── uploads/
+├── oauth2.py
+├── database.py
+└── main.py
 ```
 
 ---
 
-# 🔌 API Endpoints
+## Backend Features
 
-## Authentication
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/auth/register` |
-| POST | `/auth/login` |
-
----
-
-## Documents
-
-| Method | Endpoint |
-|---------|----------|
-| GET | `/documents/` |
-| POST | `/documents/` |
-| DELETE | `/documents/{id}` |
+- JWT Authentication
+- Secure User Accounts
+- PDF Upload
+- Text Extraction
+- Gemini AI Integration
+- Conversation Memory
+- Chat History
+- PostgreSQL Storage
+- REST APIs
 
 ---
 
-## AI
+## Future Improvements
 
-| Method | Endpoint |
-|---------|----------|
-| POST | `/ai/ask` |
-| GET | `/ai/history/{document_id}` |
+- Vector embeddings (RAG)
+- Semantic search
+- Streaming AI responses
+- Multiple AI providers
+- Document summarization
+- Citation support
+- OCR for scanned PDFs
 
 ---
 
-# ⚙️ Installation
+## Getting Started
 
-Clone the repository
+### Frontend
+
+```bash
+git clone https://github.com/rishab0615/doc-ai-flutter.git
+
+cd doc-ai-flutter
+
+flutter pub get
+
+flutter run
+```
+
+### Backend
 
 ```bash
 git clone https://github.com/rishab0615/doc-ai-document-assistant-backend.git
-```
 
-Create a virtual environment
+cd doc-ai-document-assistant-backend
 
-```bash
 python -m venv .venv
-```
 
-Activate it
-
-### macOS / Linux
-
-```bash
 source .venv/bin/activate
-```
 
-### Windows
-
-```bash
-.venv\Scripts\activate
-```
-
-Install dependencies
-
-```bash
 pip install -r requirements.txt
-```
 
-Create a `.env`
-
-```env
-DATABASE_URL=your_postgres_url
-
-SECRET_KEY=your_secret_key
-
-ALGORITHM=HS256
-
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-GEMINI_API_KEY=your_gemini_api_key
-```
-
-Run migrations
-
-```bash
 alembic upgrade head
-```
 
-Start the server
-
-```bash
 uvicorn app.main:app --reload
-```
-
-Swagger UI
-
-```
-http://127.0.0.1:8000/docs
 ```
 
 ---
 
+<<<<<<< HEAD
 # 🔄 Request Flow
 
 ```text
@@ -256,17 +263,19 @@ Flutter Client
 https://github.com/rishab0615/doc-ai-flutter
 
 ---
-
-# 👨‍💻 Author
+## Author
+>>>>>>> a297bf4 (created dockerized containers for this app)
 
 **Rishab Sharma**
 
-Flutter & FastAPI Developer
+Flutter Developer
 
-GitHub
-
+GitHub:
 https://github.com/rishab0615
 
-LinkedIn
+Portfolio:
+https://rishabsharma.web.app
 
+LinkedIn:
 https://www.linkedin.com/in/rishab-sharma-3ba404235/
+>>>>>>> a297bf4 (created dockerized containers for this app)
