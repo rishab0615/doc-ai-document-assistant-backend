@@ -8,6 +8,9 @@ from app.routers import documents
 from app.routers import auth
 from app.routers import ai
 from app.routers import chat
+from app.routers import health
+
+
 
 
 
@@ -20,6 +23,7 @@ Base.metadata.create_all(bind=engine)
 
 
 # Routes
+app.include_router(health.router)
 app.include_router(documents.router)
 app.include_router(auth.router)
 app.include_router(ai.router)
