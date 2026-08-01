@@ -2,7 +2,7 @@
 
 DocMind is a full-stack AI-powered document assistant that allows users to upload PDF documents, extract their content, and ask natural language questions using **Google Gemini AI**.
 
-The backend is built with **FastAPI**, **PostgreSQL**, **pgvector**, and **Retrieval-Augmented Generation (RAG)**, while the frontend is built with **Flutter**.
+The backend is built with **FastAPI**, **PostgreSQL (pgvector)**, and **Retrieval-Augmented Generation (RAG)**, while the frontend is built with **Flutter**.
 
 ---
 
@@ -14,31 +14,49 @@ The backend is built with **FastAPI**, **PostgreSQL**, **pgvector**, and **Retri
 - 📖 Automatic PDF Text Extraction
 - 🤖 Google Gemini AI Integration
 - 🧠 Retrieval-Augmented Generation (RAG)
+- 🧬 Gemini Embedding API
+- 🔍 Semantic Search using pgvector
 - 💬 Persistent Chat History
-- 🧠 Conversation Memory
 - 🗂️ Document Management
-- 🗑️ Delete Documents & Chat History
+- 🗑️ Delete Documents & Associated Chat History
 - 🛡️ User-specific Data Isolation
 - ⚡ RESTful APIs
 - 🗄️ PostgreSQL Database
-- 🧬 pgvector Semantic Search
 - 🐳 Docker & Docker Compose Support
-- 📱 Clean Flutter UI
 
 ---
 
 # 🏗️ Architecture
 
 ```text
-Flutter App
-      │
-      ▼
- FastAPI Backend
-      │
-      ├──────────────► Google Gemini API
-      │
-      ▼
- PostgreSQL + pgvector
+                PDF Upload
+                     │
+                     ▼
+          Extract Text (PyMuPDF)
+                     │
+                     ▼
+             Text Chunking
+                     │
+                     ▼
+      Generate Gemini Embeddings
+                     │
+                     ▼
+      PostgreSQL + pgvector Storage
+                     │
+                     ▼
+         Semantic Similarity Search
+                     │
+                     ▼
+          Relevant Document Chunks
+                     │
+                     ▼
+      Previous Conversation History
+                     │
+                     ▼
+             Google Gemini AI
+                     │
+                     ▼
+              AI Generated Answer
 ```
 
 ---
@@ -51,14 +69,17 @@ Flutter App
 - GetX
 - Dio
 - Flutter Markdown
+- Flutter Secure Storage
 
 ## Backend
 
+- Python
 - FastAPI
 - SQLAlchemy
 - PostgreSQL
 - pgvector
 - Alembic
+- PyMuPDF
 - JWT Authentication
 - Docker
 - Docker Compose
@@ -66,65 +87,26 @@ Flutter App
 ## AI
 
 - Google Gemini API
+- Gemini Embedding API
 - Retrieval-Augmented Generation (RAG)
-- Vector Embeddings
 - Semantic Search
+
+## Deployment
+
+- Render
+- Neon PostgreSQL
 
 ---
 
 # 📱 Screenshots
 
-## Splash Screen
+## Swagger API
 
-<img src="screenshots/splash.png" width="260">
-
----
-
-## Login Screen
-
-<img src="screenshots/login.png" width="260">
-
----
-
-## Empty Library
-
-<img src="screenshots/nodoc.png" width="260">
-
----
-
-## Upload Document
-
-<img src="screenshots/upload.png" width="260">
-
----
-
-## Document Library
-
-<img src="screenshots/docs.png" width="260">
-
----
-
-## AI Chat
-
-<img src="screenshots/chats.png" width="260">
+<img src="screenshots/swagger.png" width="900">
 
 ---
 
 # 📂 Project Structure
-
-## Flutter
-
-```text
-lib/
-├── core/
-├── features/
-│   ├── auth/
-│   ├── documents/
-│   ├── upload/
-│   └── chat/
-├── routes/
-└── main.dart
-```
 
 ## Backend
 
@@ -137,6 +119,7 @@ app/
 ├── services/
 ├── oauth2.py
 ├── database.py
+├── config.py
 └── main.py
 ```
 
@@ -157,19 +140,19 @@ Upload PDF
 
 ↓
 
-Extract Text
+Extract Text (PyMuPDF)
 
 ↓
 
-Store Document
+Chunk Document
 
 ↓
 
-Generate Embeddings
+Generate Gemini Embeddings
 
 ↓
 
-Store Vector in PostgreSQL (pgvector)
+Store Embeddings in PostgreSQL (pgvector)
 
 ↓
 
@@ -177,23 +160,27 @@ User asks a question
 
 ↓
 
-Retrieve relevant document chunks
+Similarity Search
 
 ↓
 
-Load previous chat history
+Retrieve Relevant Chunks
 
 ↓
 
-Send context + chat history to Gemini
+Load Previous Chat History
 
 ↓
 
-Store AI response
+Send Context + Chat History to Gemini
 
 ↓
 
-Return answer
+Store AI Response
+
+↓
+
+Return Answer
 ```
 
 ---
@@ -214,6 +201,7 @@ Authorization: Bearer <access_token>
 
 ```bash
 git clone https://github.com/rishab0615/ai-document-assistant.git
+
 cd ai-document-assistant
 ```
 
@@ -223,15 +211,23 @@ cd ai-document-assistant
 cp .env.example .env
 ```
 
-Fill in your Gemini API key and other environment variables.
+Fill in the required environment variables:
 
-## Start everything
+```env
+DB_URL=your_database_url
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=10080
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+## Start the application
 
 ```bash
 docker compose up --build
 ```
 
-This starts:
+Services started:
 
 - FastAPI Backend
 - PostgreSQL
@@ -245,7 +241,7 @@ Backend:
 http://localhost:8000
 ```
 
-Swagger:
+Swagger UI:
 
 ```
 http://localhost:8000/docs
@@ -254,8 +250,6 @@ http://localhost:8000/docs
 ---
 
 # 💻 Running Without Docker
-
-## Backend
 
 ```bash
 python -m venv .venv
@@ -269,18 +263,16 @@ alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
----
+Backend:
 
-# 📱 Flutter Client
+```
+http://localhost:8000
+```
 
-```bash
-git clone https://github.com/rishab0615/doc-ai-flutter.git
+Swagger UI:
 
-cd doc-ai-flutter
-
-flutter pub get
-
-flutter run
+```
+http://localhost:8000/docs
 ```
 
 ---
@@ -288,8 +280,9 @@ flutter run
 # 🚀 Future Improvements
 
 - Streaming AI Responses
-- OCR Support
+- OCR Support for Scanned PDFs
 - Citation Support
+- Multi-document Conversations
 - Multiple AI Providers
 - Refresh Tokens
 - Redis Caching
@@ -308,10 +301,6 @@ Software Engineer | Flutter • Python • FastAPI • AI Applications
 **GitHub**
 
 https://github.com/rishab0615
-
-**Portfolio**
-
-https://rishabsharma.web.app
 
 **LinkedIn**
 
